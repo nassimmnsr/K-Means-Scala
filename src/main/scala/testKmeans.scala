@@ -6,9 +6,13 @@ object testKmeans {
     // iris.data et irisAttributes.names
     val donnees = new Data("ressources/iris.data", "ressources/irisAttributesNames.txt")
 
-    donnees.displayAllData()
+    val exemples = donnees.getNormalizedData
+
+    val cluster = new Cluster("cluster 1", exemples, 4)
+
+
     println(" ")
-    println(donnees.nbData)
+    println(cluster.toString)
 
   }
 }
