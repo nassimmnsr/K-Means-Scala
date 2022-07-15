@@ -23,10 +23,15 @@ object testKmeans {
     println("\nNombre d'éléments du cluster : " + cluster.size)
     println("\nNombre d'attributs des éléments du cluster : " + cluster.nbAttributes)
     println("\nNumero de l'Exemple situé au ième rang du Cluster : " + cluster.get(1))
-    println("\nCentroid initiaux : " + cluster.getCentroid)
+    println("\nExemple situé au ième rang du Cluster : " + cluster.getClusterData(1))
     cluster.initCentroid
-    println("\nCentroid initiaux : " + cluster.getCentroid)
-    
+    println("\nCentroid initial : " + cluster.getCentroid + ", Numéro du centroid initial : " + cluster.getCentroidNum)
+    cluster.centroidUpd(123)
+    println("\nCentroid initial : " + cluster.getCentroid + ", Numéro du centroid initial : " + cluster.getCentroidNum)
+
+
+
+
 
 
 

@@ -8,6 +8,7 @@ class Cluster(val name: String,  val donnees: Array[Exemple], val _nbAttributes:
    private val clusterDataExemple = new ArrayBuffer[Exemple]
 
    private var centroid: Individu = _
+   private var centroidNum: Int = _
 
    override def toString: String =
       for (i <- 0 until this.clusterDataNum.length)
@@ -24,10 +25,19 @@ class Cluster(val name: String,  val donnees: Array[Exemple], val _nbAttributes:
 
    def get(i: Int): Int = this.clusterDataNum(i)
 
+   def getClusterData(i: Int): Exemple = this.clusterDataExemple(i)
+
    def initCentroid: Unit =
       val random = new Random()
-      this.centroid = clusterDataExemple(random.nextInt(clusterDataNum.length))
+      this.centroidNum = clusterDataNum(random.nextInt(clusterDataNum.length))
+      this.centroid = this.donnees(centroidNum)
 
    def getCentroid: Individu = this.centroid
+
+   def getCentroidNum: Int = this.centroidNum
+
+   def centroidUpd(c: Int): Unit =
+      this.centroidNum = c
+      this.centroid = this.donnees(c)
 
 
