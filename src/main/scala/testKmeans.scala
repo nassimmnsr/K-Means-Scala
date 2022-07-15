@@ -11,16 +11,17 @@ object testKmeans {
     val cluster = new Cluster("cluster 1", exemples, 4)
 
 
-    println(" ")
-    println(cluster.toString)
+    //println(" ")
+    //println(cluster.toString)
     println(" ")
     cluster.add(4)
     cluster.add(6)
     cluster.add(123)
     cluster.add(19)
     cluster.add(77)
-    println(cluster.toString)
-    println("\n" + cluster.size)
+    println("\nContenue du cluster" + cluster.toString)
+    println("\nNombre d'éléments du cluster : " + cluster.size)
+    println("\nNombre d'attributs des éléments du cluster : " + cluster.nbAttributes)
 
   }
 }
