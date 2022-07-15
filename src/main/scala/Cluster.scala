@@ -27,6 +27,8 @@ class Cluster(val name: String,  val donnees: Array[Exemple], val _nbAttributes:
 
    def getClusterData(i: Int): Exemple = this.clusterDataExemple(i)
 
+   def getClusterDataExemple(): ArrayBuffer[Exemple] = this.clusterDataExemple
+
    def initCentroid: Unit =
       val random = new Random()
       this.centroidNum = clusterDataNum(random.nextInt(clusterDataNum.length))
@@ -40,4 +42,51 @@ class Cluster(val name: String,  val donnees: Array[Exemple], val _nbAttributes:
       this.centroidNum = c
       this.centroid = this.donnees(c)
 
+   def classNumber(i: Int): Int = this.donnees(i).classNumber
 
+   def classNumber: Int =
+      var categorie1 = 0
+      var categorie2 = 0
+      var categorie3 = 0
+
+      var classe = 0
+      var categorie = 0
+
+      for (i <- 0 until this.clusterDataNum.length)
+         classe = this.classNumber(clusterDataNum(i))
+         if classe == 0 then
+            categorie1 += 1
+         else if classe == 1 then
+            categorie2 += 1
+         else
+            categorie3 += 1
+
+      if categorie1 > categorie2 && categorie1 > categorie3 then
+         categorie = 0
+         return categorie
+
+      else if categorie2 > categorie1 && categorie2 > categorie3 then
+         categorie = 1
+         return categorie
+
+      else
+         categorie = 2
+         return categorie
+
+   def className(i: Int): String = 
+      var classeNumber = this.donnees(i).classNumber
+      if classeNumber == 0 then
+         return "Iris-setosa"
+      else if classeNumber == 1 then 
+         return "Iris-versicolor"
+      else 
+         return "Iris-virginica"
+         
+   def className: String =
+      var classeNumberMaj = this.classNumber
+      if classeNumberMaj == 0 then
+         return "Iris-setosa"
+      else if classeNumberMaj == 1 then
+         return "Iris-versicolor"
+      else
+         return "Iris-virginica"
