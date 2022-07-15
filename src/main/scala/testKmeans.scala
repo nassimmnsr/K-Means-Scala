@@ -13,6 +13,13 @@ object testKmeans {
 
     println(" ")
     println(cluster.toString)
+    println(" ")
+    cluster.add(4)
+    cluster.add(6)
+    cluster.add(123)
+    cluster.add(19)
+    cluster.add(77)
+    println(cluster.toString)
 
   }
 }
