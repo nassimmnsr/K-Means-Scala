@@ -20,6 +20,7 @@ object testKmeans {
     cluster.add(19)
     cluster.add(77)
     println(cluster.toString)
+    println("\n" + cluster.size)
 
   }
 }

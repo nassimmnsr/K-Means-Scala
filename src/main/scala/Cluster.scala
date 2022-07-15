@@ -8,3 +8,5 @@ class Cluster(val name: String,  donnees: Array[Exemple], _nbAttributes: Int) :
 
    def add(num: Int): Unit = this.clusterData.append(this.donnees(num))
 
+   def size : Int = this.clusterData.length
+
