@@ -1,9 +1,13 @@
 import scala.collection.mutable.ArrayBuffer
+import scala.util.Random
 
-class Cluster(val name: String,  donnees: Array[Exemple], _nbAttributes: Int) :
+
+class Cluster(val name: String,  val donnees: Array[Exemple], val _nbAttributes: Int) :
 
    private val clusterDataNum = new ArrayBuffer[Int]
    private val clusterDataExemple = new ArrayBuffer[Exemple]
+
+   private var centroid: Individu = _
 
    override def toString: String =
       for (i <- 0 until this.clusterDataNum.length)
@@ -17,5 +21,13 @@ class Cluster(val name: String,  donnees: Array[Exemple], _nbAttributes: Int) :
    def size : Int = this.clusterDataNum.length
 
    def nbAttributes: Int = this._nbAttributes
+
+   def get(i: Int): Int = this.clusterDataNum(i)
+
+   def initCentroid: Unit =
+      val random = new Random()
+      this.centroid = clusterDataExemple(random.nextInt(clusterDataNum.length))
+
+   def getCentroid: Individu = this.centroid
 
 

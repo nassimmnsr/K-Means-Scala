@@ -22,6 +22,13 @@ object testKmeans {
     println("\nContenue du cluster" + cluster.toString)
     println("\nNombre d'éléments du cluster : " + cluster.size)
     println("\nNombre d'attributs des éléments du cluster : " + cluster.nbAttributes)
+    println("\nNumero de l'Exemple situé au ième rang du Cluster : " + cluster.get(1))
+    println("\nCentroid initiaux : " + cluster.getCentroid)
+    cluster.initCentroid
+    println("\nCentroid initiaux : " + cluster.getCentroid)
+    
+
+
 
   }
 }
