@@ -39,7 +39,7 @@ class Individu(private val _nbAttributes: Int):
     for (attribut <- this.donnee)
       s = s + f"$attribut%.3f "
 
-    return s
+    s
 
 
   /**
@@ -51,7 +51,7 @@ class Individu(private val _nbAttributes: Int):
     for (j <- this.donnee.indices)
       dist += (this.get(j) - ind.get(j)) * (this.get(j) - ind.get(j))
 
-    return math.sqrt(dist)
+    math.sqrt(dist)
 
 // fin classe Individu
 
@@ -67,4 +67,4 @@ object Individu:
     for (j <- 0 until nbAttributs)
       individu.set(j, alea.nextDouble)
 
-    return individu
+    individu

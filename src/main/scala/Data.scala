@@ -26,7 +26,7 @@ class Data(fichierDonnees: String, fichierAttributs: String):
   private var attributesValues: Array[Array[Double]] = _
   private var nbClasses: Int = 0
 
-  this.loadData
+  this.loadData()
 
 
   // accesseurs
@@ -204,7 +204,7 @@ def plotAttributeAgainstAttribute(a1 : Int, a2 : Int) : Unit =
    * recupere les Exemples du fichier fichierData, les normalise et les place dans la matrice.
    * (les données originales et normalisées sont accessibles)
    */
-  def loadData: Unit =
+  def loadData(): Unit =
     this.readData()
     this.initializeData()
     this.computeStats()
