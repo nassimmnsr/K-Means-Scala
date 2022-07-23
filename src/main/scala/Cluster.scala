@@ -8,7 +8,7 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
   private var clusterIntraDistance: Double = 0
   private var clusterError: Double = 0
   private val clusterClassName: String = ""
-  private var clusterClassNumber: Int = 0
+  private var clusterClassNumber: Int = -1
 
   def add(num: Int): Unit =
     this.exemplesNums.append(num)
@@ -32,11 +32,11 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
     (0 until _nbAttributes).foreach(i => this.clusterCentroid.set(i, sumAttributes(i) / this.size))
 
   def computeClassCluster(): Unit =
-    this.clusterClassNumber = this.exemples.maxBy(_.classNumber).classNumber
+    this.clusterClassNumber = this.exemples.groupBy(_.classNumber).maxBy(_._2.size)._1
 
 
   def computeClusterError(): Unit =
-    this.clusterError = (this.exemples.filterNot(_.classNumber == this.classNumber).size / this.size) * 100
+    this.clusterError = (this.exemples.filterNot(_.classNumber == this.classNumber).size.toDouble / this.size) * 100
 
 
   def computeIntraDistance(): Unit =
@@ -62,5 +62,5 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
   override def toString: String =
     s"Cluster(clusterName: ${this.clusterName}, _nbAttributes: ${this._nbAttributes}, exemplesNums: " +
       s"${this.exemplesNums}, clusterCentroid: ${this.clusterCentroid}, clusterIntraDistance: " +
-      s"${this.clusterIntraDistance}, clusterError: ${this.clusterError}, clusterClassName: TEMPORARILY_UNAVAILABLE" +
+      s"${this.clusterIntraDistance}, clusterError: ${this.clusterError}, clusterClassName: TEMPORARILY_UNAVAILABLE, " +
       s"clusterClassNumber: ${this.clusterClassNumber})"
