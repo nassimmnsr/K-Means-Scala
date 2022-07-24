@@ -8,16 +8,22 @@ class Cluster(val clusterName: String,  val donnees: Array[Exemple], val _nbAttr
 
    private val clusterDataNum: ArrayBuffer[Int] = new ArrayBuffer[Int]()
    private var clusterCentroid: Individu = new Individu(_nbAttributes)
-   private val clusterClassName: String =""
-   private var clusterClassNumber: Int = 0
-   private var clusterError: Double = 0
-   private var clusterIntraDistance: Double = 0
+   private var clusterClassName: String = ""
+   private var clusterClassNumber: Int = _
+   private var clusterError: Double = _
+   private var clusterIntraDistance: Double = _
 
    //Get
 
    def centroid: Individu = this.clusterCentroid
 
-   def className: String = this.clusterClassName
+   def className: String =
+      //method specific to this clustering
+      if this.clusterClassNumber == 0 then this.clusterClassName = "Iris-setosa"
+      else if this.clusterClassNumber == 0 then this.clusterClassName = "Iris-versicolor"
+      else this.clusterClassName = "Iris-virginica"
+      this.clusterClassName
+
 
    def classNumber: Int = this.clusterClassNumber
 
