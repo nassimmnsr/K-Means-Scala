@@ -52,6 +52,11 @@ class Individu(private val _nbAttributes: Int):
       dist += (this.get(j) - ind.get(j)) * (this.get(j) - ind.get(j))
 
     math.sqrt(dist)
+    
+  def copy: Individu =
+    val ind = new Individu(this.nbAttributes)
+    this.donnee.indices.foreach(j => ind.set(j, this.get(j)))    
+    ind
 
 // fin classe Individu
 

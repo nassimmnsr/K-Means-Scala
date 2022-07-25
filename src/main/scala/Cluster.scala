@@ -1,12 +1,13 @@
 import scala.collection.mutable.ArrayBuffer
 import scala.math
+import scala.util.Random
 
 class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int):
   private val exemplesNums: ArrayBuffer[Int] = new ArrayBuffer[Int]()
-  private var clusterCentroid: Individu = new Individu(_nbAttributes)
+  private var clusterCentroid: Individu = Individu.generateRandomIndividu(_nbAttributes, Random)
   private val clusterName = cName
-  private var clusterIntraDistance: Double = 0
-  private var clusterError: Double = 0
+  private var clusterIntraDistance: Double = _
+  private var clusterError: Double = _
   private val clusterClassName: String = ""
   private var clusterClassNumber: Int = -1
 
@@ -24,26 +25,20 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
 
   def computeCentroid(): Unit =
     val sumAttributes: Array[Double] = new Array[Double](_nbAttributes)
-
-    this.exemples.foreach(exemple =>
-      (0 until _nbAttributes).foreach(j => sumAttributes(j) += exemple.get(j))
-    )
-
+    this.exemples.foreach(exemple => (0 until _nbAttributes).foreach(j => sumAttributes(j) += exemple.get(j)))
     (0 until _nbAttributes).foreach(i => this.clusterCentroid.set(i, sumAttributes(i) / this.size))
 
   def computeClassCluster(): Unit =
-    this.clusterClassNumber = this.exemples.groupBy(_.classNumber).maxBy(_._2.size)._1
-
+    if this.size > 0 then
+      this.clusterClassNumber = this.exemples.groupBy(_.classNumber).maxBy(_._2.size)._1
 
   def computeClusterError(): Unit =
     this.clusterError = (this.exemples.filterNot(_.classNumber == this.classNumber).size.toDouble / this.size) * 100
 
-
   def computeIntraDistance(): Unit =
     this.clusterIntraDistance = this.exemples.map(exemple => math.pow(exemple.distance(this.clusterCentroid), 2)).sum / this.size
 
-  def empty(): Unit =
-    this.exemplesNums.clear()
+  def empty(): Unit = this.exemplesNums.clear()
 
   def erreur: Double = this.clusterError
 
