@@ -5,7 +5,7 @@ object testData {
     // iris.data et irisAttributes.names
 
     val donnees = new Data("ressources/data/iris.data", "ressources/data/irisAttributesNames.txt")
-
-    println(donnees.getData(112))
+    donnees.displayNormalizedData()
+//    println(donnees.getData(112))
   }
 }

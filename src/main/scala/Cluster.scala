@@ -24,9 +24,10 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
   def classNumber: Int = this.clusterClassNumber
 
   def computeCentroid(): Unit =
-    val sumAttributes: Array[Double] = new Array[Double](_nbAttributes)
-    this.exemples.foreach(exemple => (0 until _nbAttributes).foreach(j => sumAttributes(j) += exemple.get(j)))
-    (0 until _nbAttributes).foreach(i => this.clusterCentroid.set(i, sumAttributes(i) / this.size))
+    if this.size != 0 then
+      val sumAttributes: Array[Double] = new Array[Double](_nbAttributes)
+      this.exemples.foreach(exemple => (0 until exemple.nbAttributes).foreach(i => sumAttributes(i) += exemple.get(i)))
+      (0 until _nbAttributes).foreach(i => this.clusterCentroid.set(i, sumAttributes(i) / this.size))
 
   def computeClassCluster(): Unit =
     if this.size > 0 then
@@ -36,7 +37,10 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
     this.clusterError = (this.exemples.filterNot(_.classNumber == this.classNumber).size.toDouble / this.size) * 100
 
   def computeIntraDistance(): Unit =
-    this.clusterIntraDistance = this.exemples.map(exemple => math.pow(exemple.distance(this.clusterCentroid), 2)).sum / this.size
+    this.clusterIntraDistance = this.exemples.map(exemple => math.pow(exemple.distance(this.clusterCentroid), 2)).sum / this.size.toDouble
+    if clusterIntraDistance.isNaN then
+      println("clusterIntraDistance is NaN")
+      println(s"${this.exemples.map(exemple => math.pow(exemple.distance(this.clusterCentroid), 2)).sum} / ${this.size.toDouble} = ${this.clusterIntraDistance}")
 
   def empty(): Unit = this.exemplesNums.clear()
 
