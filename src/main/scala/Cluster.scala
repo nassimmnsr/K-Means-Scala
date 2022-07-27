@@ -41,6 +41,7 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
     if clusterIntraDistance.isNaN then
       println("clusterIntraDistance is NaN")
       println(s"${this.exemples.map(exemple => math.pow(exemple.distance(this.clusterCentroid), 2)).sum} / ${this.size.toDouble} = ${this.clusterIntraDistance}")
+//      Thread.sleep(4000)
 
   def empty(): Unit = this.exemplesNums.clear()
 

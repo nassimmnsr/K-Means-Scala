@@ -30,12 +30,13 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
         cluster.computeClusterError();
         cluster.computeIntraDistance();
       )
-//      if iteration == 0 then
+
+      //      if iteration == 0 then
 //        this.computeQuality()
 //        println(s"Qualite du clustering: $qualiteClustering")
 
       iteration += 1
-      if initialCentroids.zipWithIndex.forall((centroid, i) => centroid.distance(this.clusters(i).centroid) == 0.0 || centroid.distance(this.clusters(i).centroid).isNaN) then stop = true
+      if initialCentroids.zipWithIndex.forall((centroid, i) => centroid.distance(this.clusters(i).centroid) == 0.0) then stop = true
 
 //        println(s"Centroid $i: ${centroid.distance(this.clusters(i).centroid)}")
 
@@ -43,6 +44,7 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
 
 //        if initialCentroids(i).distance(this.clusters(i).centroid) < 1E-20 then stop = true else stop = false
 //      )
+//    this.data.plotAttributesValues()
     println("Fin du Clustering")
     this.computeQuality()
     println(s"Qualite du K-Mims: $qualiteClustering")
@@ -67,24 +69,24 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
     this.computeInterDistance()
     this.clusters.foreach(_.computeIntraDistance())
     val intraDistance: Double = this.clusters.map(_.intraDistance).sum / this.clusters.length.toDouble
-    if intraDistance.isNaN then
-      println("IntraDistance is NaN")
-      println(s"${this.clusters.map(_.intraDistance).sum} / ${this.clusters.length.toDouble} = $intraDistance")
-      Thread.sleep(4000)
+//    if intraDistance.isNaN then
+//      println("IntraDistance is NaN")
+//      println(s"${this.clusters.map(_.intraDistance).sum} / ${this.clusters.length.toDouble} = $intraDistance")
+//      Thread.sleep(4000)
     this.qualiteClustering = this.interDistance / (this.clusters.map(_.intraDistance).sum / this.clusters.length.toDouble)
     if this.qualiteClustering.isNaN then
       println("Erreur de calcul de la qualite")
       println(s"Interdistance: $interDistance")
-      println(s"IntraDistance: ${intraDistance}")
-      Thread.sleep(8000)
+      println(s"IntraDistance: $intraDistance")
+//      Thread.sleep(8000)
 
   private def computeInterDistance(): Unit =
     val k = this.clusters.length
 
     this.interDistance = 0.0
-    for i <- 0 until k - 1 do
-      for j <- i + 1 until k do
-        this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)
+//    for i <- 0 until k - 1 do
+//      for j <- i + 1 until k do
+//        this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)
 
-//    (0 until k - 1).foreach(i => (i + 1 until k).foreach(j => this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)))
+    (0 until k - 1).foreach(i => (i + 1 until k).foreach(j => this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)))
     this.interDistance /= (k * (k - 1) / 2)

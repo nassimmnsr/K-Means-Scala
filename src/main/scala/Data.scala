@@ -1,6 +1,6 @@
 import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
-// import breeze.plot._
+import breeze.plot._
 
 /**
  * Gère une matrice d'Exemples
@@ -76,102 +76,101 @@ class Data(fichierDonnees: String, fichierAttributs: String):
   /**
    * representation graphique des valeurs de tous les attributs
    */
-  /*
-def plotAttributesValues() : Unit =
-{
-
-  val f = Figure("Attributs")
-
-                      // pour chaque attribut
-  for (j <- 0 until this.nbAttributs)
+  def plotAttributesValues() : Unit =
   {
-    val p = f.subplot(this.nbAttributs, 1, j)
 
-    p.xlabel = "indices"
-    p.ylabel = "valeurs"
-    p.title = this.attributesNames(j)
+    val f = Figure("Attributs")
 
-          // y contiendra les donneees de l'attribut reparties par classe
-                      // y contiendra les indices des donnees
-          val y : Array[ArrayBuffer[Double]] = Array.ofDim(this.nbClasses)
-    val x : Array[ArrayBuffer[Double]] = Array.ofDim(this.nbClasses)
-
-    for (c <- 0 until this.nbClasses)
+                        // pour chaque attribut
+    for (j <- 0 until this.nbAttributs)
     {
-      x(c) = new ArrayBuffer[Double]()
-      y(c) = new ArrayBuffer[Double]()
-    }
+      val p = f.subplot(this.nbAttributs, 1, j)
 
-                      // on distribue les valeurs dans y en fonction de la classe de
-                      // l'exemple contenant l'attribut
-    for (i <- this.attributesValues(j).indices)
-    {
-            // recupere la classe de la donnee i
-      val c = this.normalizedData(i).classNumber
-              x(c).append(i)
-              y(c).append(this.attributesValues(j)(i))
-    }
+      p.xlabel = "indices"
+      p.ylabel = "valeurs"
+      p.title = this.attributesNames(j)
 
-          // fait un plot de chaque classe avec une couleur differente
-    for (c <- 0 until this.nbClasses)
-    {
-      if (j == this.nbAttributs -1)
-              {
-                  p.legend = true
-                  p += plot(x(c), y(c), style = '+', colorcode = LearningData.colors(c),
-                      name = this.classesNames(c))
-              }
-              else
-                  p += plot(x(c), y(c), style = '+', colorcode = LearningData.colors(c))
+            // y contiendra les donneees de l'attribut reparties par classe
+                        // y contiendra les indices des donnees
+            val y : Array[ArrayBuffer[Double]] = Array.ofDim(this.nbClasses)
+      val x : Array[ArrayBuffer[Double]] = Array.ofDim(this.nbClasses)
+
+      for (c <- 0 until this.nbClasses)
+      {
+        x(c) = new ArrayBuffer[Double]()
+        y(c) = new ArrayBuffer[Double]()
+      }
+
+                        // on distribue les valeurs dans y en fonction de la classe de
+                        // l'exemple contenant l'attribut
+      for (i <- this.attributesValues(j).indices)
+      {
+              // recupere la classe de la donnee i
+        val c = this.normalizedData(i).classNumber
+                x(c).append(i)
+                y(c).append(this.attributesValues(j)(i))
+      }
+
+            // fait un plot de chaque classe avec une couleur differente
+      for (c <- 0 until this.nbClasses)
+      {
+        if (j == this.nbAttributs -1)
+                {
+                    p.legend = true
+                    p += plot(x(c), y(c), style = '+', colorcode = Data.colors(c),
+                        name = this.classesNames(c))
+                }
+                else
+                    p += plot(x(c), y(c), style = '+', colorcode = Data.colors(c))
+      }
     }
   }
-}
-*/
+
   /**
    * representation graphique des valeurs de tous les attributs
    */
-  /*
-def plotAttributeAgainstAttribute(a1 : Int, a2 : Int) : Unit =
-{
-    val nomFigure = this.attributesNames(a2) + "/" + this.attributesNames(a1)
-    val f = Figure(nomFigure)
-    val p = f.subplot(0)
 
-    p.xlabel = this.attributesNames(a1)
-    p.ylabel = this.attributesNames(a2)
-    p.title  = nomFigure
+  def plotAttributeAgainstAttribute(a1 : Int, a2 : Int) : Unit =
+  {
+      val nomFigure = this.attributesNames(a2) + "/" + this.attributesNames(a1)
+      val f = Figure(nomFigure)
+      val p = f.subplot(0)
 
-         // x contiendra les donneees de l'attribut a1 reparties par classe
-         // y contiendra les donnees de l'attributs a2 reparties par classe
-    val y : Array[ArrayBuffer[Double]] = Array.ofDim(this.nbClasses)
-    val x : Array[ArrayBuffer[Double]] = Array.ofDim(this.nbClasses)
+      p.xlabel = this.attributesNames(a1)
+      p.ylabel = this.attributesNames(a2)
+      p.title  = nomFigure
 
-    for (c <- 0 until this.nbClasses)
-    {
-        x(c) = new ArrayBuffer[Double]()
-        y(c) = new ArrayBuffer[Double]()
-    }
+           // x contiendra les donneees de l'attribut a1 reparties par classe
+           // y contiendra les donnees de l'attributs a2 reparties par classe
+      val y : Array[ArrayBuffer[Double]] = Array.ofDim(this.nbClasses)
+      val x : Array[ArrayBuffer[Double]] = Array.ofDim(this.nbClasses)
 
-    // on distribue les valeurs des 2 attributes en fonction de leur classe
-    for (i <- 0 until this.nbDonnees)
-    {
-        // println("i = " + i)
-        // recupere la classe de la donnee i
-        val c = this.normalizedData(i).classNumber
-        x(c).append(this.attributesValues(a1)(i))
-        y(c).append(this.attributesValues(a2)(i))
-    }
+      for (c <- 0 until this.nbClasses)
+      {
+          x(c) = new ArrayBuffer[Double]()
+          y(c) = new ArrayBuffer[Double]()
+      }
+
+      // on distribue les valeurs des 2 attributes en fonction de leur classe
+      for (i <- 0 until this.nbDonnees)
+      {
+          // println("i = " + i)
+          // recupere la classe de la donnee i
+          val c = this.normalizedData(i).classNumber
+          x(c).append(this.attributesValues(a1)(i))
+          y(c).append(this.attributesValues(a2)(i))
+      }
 
 
-           // fait un plot de chaque classe avec une couleur differente
-    for (c <- 0 until this.nbClasses)
-    {
-       p.legend = true
-       p += plot(x(c), y(c), style = '+', colorcode = LearningData.colors(c),
-                 name = this.classesNames(c))
-    }
-}
-*/
+             // fait un plot de chaque classe avec une couleur differente
+      for (c <- 0 until this.nbClasses)
+      {
+         p.legend = true
+         p += plot(x(c), y(c), style = '+', colorcode = Data.colors(c),
+                   name = this.classesNames(c))
+      }
+  }
+
 
   // ============================================= ACCESSEURS ========================================================
 
