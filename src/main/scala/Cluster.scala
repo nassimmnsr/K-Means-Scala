@@ -7,7 +7,7 @@ class Cluster(val clusterName: String,  val donnees: Array[Exemple], val _nbAttr
    //Variables
 
    private val clusterDataNum: ArrayBuffer[Int] = new ArrayBuffer[Int]()
-   private var clusterCentroid: Individu = new Individu(_nbAttributes)
+   private var clusterCentroid: Individu = Individu.generateRandomIndividu(_nbAttributes, Random)
    private var clusterClassName: String = ""
    private var clusterClassNumber: Int = _
    private var clusterError: Double = _
@@ -29,9 +29,7 @@ class Cluster(val clusterName: String,  val donnees: Array[Exemple], val _nbAttr
 
    def erreur: Double = this.clusterError
 
-   def intraDistance: Double =
-      this.clusterIntraDistance = this.computeIntraDistance
-      return this.computeIntraDistance
+   def intraDistance: Double = this.clusterIntraDistance
 
    def nameCluster: String = this.clusterName
 
@@ -49,11 +47,7 @@ class Cluster(val clusterName: String,  val donnees: Array[Exemple], val _nbAttr
 
    def computeCentroid: Unit =
       val sumAttributes: Array[Double] = new Array[Double](_nbAttributes)
-
-      this.donnees.foreach(exemple =>
-      (0 until _nbAttributes).foreach(j => sumAttributes(j) += exemple.get(j))
-      )
-
+      this.donnees.foreach(exemple => (0 until _nbAttributes).foreach(j => sumAttributes(j) += exemple.get(j)))
       (0 until _nbAttributes).foreach(i => this.clusterCentroid.set(i, sumAttributes(i) / this.size))
 
 
@@ -61,17 +55,13 @@ class Cluster(val clusterName: String,  val donnees: Array[Exemple], val _nbAttr
       this.clusterError = (this.donnees.filter(_.classNumber != this.classNumber).size.toDouble / this.size) * 100
 
 
-   def computeIntraDistance: Double =
-      var sommeDonneeCluster: Double = 0
-      for (i <- 0 until this.size)
-         sommeDonneeCluster += scala.math.pow(this.donnees(i).distance(centroid),2)
-      return (1.0/this.size)*sommeDonneeCluster
-
+   def computeIntraDistance: Unit =
+      this.clusterIntraDistance = this.donnees.map(donnees => math.pow(donnees.distance(this.clusterCentroid), 2)).sum / this.size
 
    def size : Int = this.clusterDataNum.length
 
 
-   def computeClassCluster(): Unit =
+   def computeClassCluster: Unit =
       this.clusterClassNumber = this.donnees.groupBy(_.classNumber).maxBy(_._2.size)._1
 
 
