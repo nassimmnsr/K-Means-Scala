@@ -9,78 +9,57 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String) {
   private val dNormalizedData = data.getNormalizedData
   private val dClasses = data.getNbClasses
   private val dData = data.getData
-  private var stop: Boolean = false
 
 
   private var qualiteClustering: Double = _
   private var interDistance: Double = _
 
 
- // def getClusters: Array[Cluster] = this.clusters
-
   def clustering(k: Int): Unit =
+    println("Clustering...")
     this.clusters = new Array[Cluster](k)
 
-    println("\nDÉBUT DU CLUSTERING...\n")
-    println(s"$k CLUSTERS :\n")
+    (0 until k).foreach(i => this.clusters(i) = new Cluster(s"cluster$i", this.data.getNormalizedData, this.data.nbAttributes))
 
-    for (i <- 0 until k) do
-      this.clusters(i) = new Cluster("cluster " + i, exemples, this.data.nbAttributes)
-      println(this.clusters(i))
-
+    var stop: Boolean = false
     var iteration: Int = 0
-    var listDistance = new ArrayBuffer[Double]
-    var distanceMin: Double = 0.0
-
-
-    while (stop == false) {
-
-      println(s"\nIteration $iteration")
-      val previousCentroid: Array[Individu] = this.clusters.map(_.centroid.copy)
+    while !stop do
+      println(s"Iteration $iteration")
+      val initialCentroids: Array[Individu] = this.clusters.map(_.centroid.copy)
       this.clusters.foreach(_.empty)
-
-      // Affectation de chaque données aux centres initiaux les plus proche
-      for (j <- 0 until this.exemples.length)
-        listDistance.clear()
-        for (i <- 0 until k)
-          listDistance.append(this.clusters(i).centroid.distance(this.exemples(j)))
-
-        //println(listDistance)
-        distanceMin = listDistance.min
-        for (i <- 0 until k)
-          if (listDistance(i) == distanceMin)
-            this.clusters(i).add(j)
-
-
-      // MAJ des centres
+      this.exemples.indices.foreach(i => this.clusters.minBy(cluster => cluster.centroid.distance(exemples(i))).add(i))
       this.clusters.foreach(cluster =>
-          cluster.computeCentroid;
-          (0 until cluster.centroid.nbAttributes).foreach(i =>
-            if cluster.centroid.get(i).isNaN then
-              print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA    ")
-                println(cluster.centroid.get(i))
-                Thread.sleep(40000))
-          cluster.computeClassCluster;
-          cluster.computeClusterError;
-          cluster.computeIntraDistance;
+        cluster.computeCentroid;
+        (0 until cluster.centroid.nbAttributes).foreach(i =>
+          if cluster.centroid.get(i).isNaN then
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA    ")
+              println(cluster.centroid.get(i))
+              Thread.sleep(40000))
+        cluster.computeClassCluster;
+        cluster.computeClusterError;
+        cluster.computeIntraDistance;
       )
 
-
-      if previousCentroid.zipWithIndex.forall((centroid, i) => centroid.distance(this.clusters(i).centroid) == 0.0) then stop = true
-
-      //this.clusters.indices.foreach(i => if clusters(i).intraDistance.isInfinite then this.clusters(i) = null)
-
-      for (i <- 0 until k)
-        println(this.clusters(i))
+      //      if iteration == 0 then
+      //        this.computeQuality()
+      //        println(s"Qualite du clustering: $qualiteClustering")
 
       iteration += 1
-      }
+      if initialCentroids.zipWithIndex.forall((centroid, i) => centroid.distance(this.clusters(i).centroid) == 0.0) then stop = true
 
+    //        println(s"Centroid $i: ${centroid.distance(this.clusters(i).centroid)}")
+
+    //      initialCentroids.indices.foreach(i =>
+
+    //        if initialCentroids(i).distance(this.clusters(i).centroid) < 1E-20 then stop = true else stop = false
+    //      )
+    //    this.data.plotAttributesValues()
     println("Fin du Clustering")
     this.computeQuality()
     println(s"Qualite du K-Mims: $qualiteClustering")
     println("Erreurs des clusters")
-    this.clusters.indices.foreach(i => println(s"Cluster $i:\terror: ${this.clusters(i).erreur}\tnumber of examples: ${this.clusters(i).size}"))
+    this.clusters.indices.foreach(i => println(s"Cluster $i:\terror: ${this.clusters(i).erreur}\t\t\t\tnumber of examples: ${this.clusters(i).size}"))
+
 
 
   def displayAllData: Unit = this.data.displayAllData()
