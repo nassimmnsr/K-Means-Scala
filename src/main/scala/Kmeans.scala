@@ -10,19 +10,21 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String) {
   private val dClasses = data.getNbClasses
   private val dData = data.getData
   private var stop: Boolean = false
-  private var previousCentroid : Array[Individu] = _
 
 
-  def getClusters: Array[Cluster] = this.clusters
+  private var qualiteClustering: Double = _
+  private var interDistance: Double = _
+
+
+ // def getClusters: Array[Cluster] = this.clusters
 
   def clustering(k: Int): Unit =
     this.clusters = new Array[Cluster](k)
 
     println("\nDÉBUT DU CLUSTERING...\n")
-    println("CHOIX DES CENTRES INITIAUX...\n")
     println(s"$k CLUSTERS :\n")
 
-    for (i <- 0 until k)
+    for (i <- 0 until k) do
       this.clusters(i) = new Cluster("cluster " + i, exemples, this.data.nbAttributes)
       println(this.clusters(i))
 
@@ -32,13 +34,10 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String) {
 
 
     while (stop == false) {
-      previousCentroid = this.clusters.map(_.centroid.copy)
-      //previousCentroid.foreach(i => println(i))
 
       println(s"\nIteration $iteration")
-
+      val previousCentroid: Array[Individu] = this.clusters.map(_.centroid.copy)
       this.clusters.foreach(_.empty)
-      for (i <- 0 until k)
 
       // Affectation de chaque données aux centres initiaux les plus proche
       for (j <- 0 until this.exemples.length)
@@ -55,20 +54,34 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String) {
 
       // MAJ des centres
       this.clusters.foreach(cluster =>
-          cluster.computeCentroid
-          cluster.computeClassCluster
-          cluster.computeClusterError
-          cluster.computeIntraDistance
+          cluster.computeCentroid;
+          (0 until cluster.centroid.nbAttributes).foreach(i =>
+            if cluster.centroid.get(i).isNaN then
+              print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA    ")
+                println(cluster.centroid.get(i))
+                Thread.sleep(40000))
+          cluster.computeClassCluster;
+          cluster.computeClusterError;
+          cluster.computeIntraDistance;
       )
 
-      previousCentroid.indices.foreach(i =>
-        if this.previousCentroid(i).distance(this.clusters(i).centroid) == 0.0 || this.previousCentroid(i).distance(this.clusters(i).centroid).isNaN then stop = true)
+
+      if previousCentroid.zipWithIndex.forall((centroid, i) => centroid.distance(this.clusters(i).centroid) == 0.0) then stop = true
+
+      //this.clusters.indices.foreach(i => if clusters(i).intraDistance.isInfinite then this.clusters(i) = null)
 
       for (i <- 0 until k)
         println(this.clusters(i))
 
       iteration += 1
-    }
+      }
+
+    println("Fin du Clustering")
+    this.computeQuality()
+    println(s"Qualite du K-Mims: $qualiteClustering")
+    println("Erreurs des clusters")
+    this.clusters.indices.foreach(i => println(s"Cluster $i:\terror: ${this.clusters(i).erreur}\tnumber of examples: ${this.clusters(i).size}"))
+
 
   def displayAllData: Unit = this.data.displayAllData()
 
@@ -79,6 +92,23 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String) {
   def displayNormalizedData: Unit = this.data.displayNormalizedData()
 
   def displayStats: Unit = this.data.displayStats()
+
+  private def qualite: Double = this.qualiteClustering
+
+  private def computeQuality(): Unit =
+    this.computeInterDistance()
+    this.qualiteClustering = this.interDistance / (this.clusters.map(_.intraDistance).sum / this.clusters.length.toDouble)
+
+  private def computeInterDistance(): Unit =
+    val k = this.clusters.length
+
+    this.interDistance = 0.0
+    for i <- 0 until k - 1 do
+      for j <- i + 1 until k do
+        this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)
+
+    //    (0 until k - 1).foreach(i => (i + 1 until k).foreach(j => this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)))
+    this.interDistance /= (k * (k - 1) / 2)
 
 
 }
