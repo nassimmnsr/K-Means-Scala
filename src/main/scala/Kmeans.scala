@@ -39,7 +39,6 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String) {
 
       // Affectation de chaque données aux centres initiaux les plus proche
         for (j <- 0 until this.exemples.length)
-          @@ -55,20 +54,34 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String) {
 
         // MAJ des centres
         this.clusters.foreach(cluster =>
