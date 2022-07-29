@@ -30,8 +30,7 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
       (0 until _nbAttributes).foreach(i => this.clusterCentroid.set(i, sumAttributes(i) / this.size))
 
   def computeClassCluster(): Unit =
-    if this.size > 0 then
-      this.clusterClassNumber = this.exemples.groupBy(_.classNumber).maxBy(_._2.size)._1
+    if this.size > 0 then this.clusterClassNumber = this.exemples.groupBy(_.classNumber).maxBy(_._2.size)._1
 
   def computeClusterError(): Unit =
     this.clusterError = (this.exemples.filterNot(_.classNumber == this.classNumber).size.toDouble / this.size) * 100

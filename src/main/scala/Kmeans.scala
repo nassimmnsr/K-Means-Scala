@@ -19,6 +19,7 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
       val initialCentroids: Array[Individu] = this.clusters.map(_.centroid.copy)
       this.clusters.foreach(_.empty())
       this.normalizedData.indices.foreach(i => this.clusters.minBy(cluster => cluster.centroid.distance(normalizedData(i))).add(i))
+      this.clusters = this.clusters.filter(_.size > 0)
       this.clusters.foreach(cluster =>
         cluster.computeCentroid();
         (0 until cluster.centroid.nbAttributes).foreach(i =>
@@ -26,9 +27,9 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
           print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA    ")
           println(cluster.centroid.get(i))
           Thread.sleep(40000))
-        cluster.computeClassCluster();
-        cluster.computeClusterError();
-        cluster.computeIntraDistance();
+        cluster.computeClassCluster()
+        cluster.computeClusterError()
+        cluster.computeIntraDistance()
       )
 
       //      if iteration == 0 then
