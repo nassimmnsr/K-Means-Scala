@@ -1,93 +1,87 @@
 import scala.collection.mutable.ArrayBuffer
 
 class Kmeans(fichierDonnees: String, fichierAttributs: String) {
-
   private val data: Data = new Data(fichierDonnees, fichierAttributs)
   private val exemples: Array[Exemple] = data.getNormalizedData
   private var clusters: Array[Cluster] = _
-
   private val dNormalizedData = data.getNormalizedData
   private val dClasses = data.getNbClasses
   private val dData = data.getData
-
+  private var stop: Boolean = false
+  private var previousCentroid : Array[Individu] = _
 
   private var qualiteClustering: Double = _
   private var interDistance: Double = _
 
 
+  //def getClusters: Array[Cluster] = this.clusters
+
   def clustering(k: Int): Unit =
-    println("Clustering...")
     this.clusters = new Array[Cluster](k)
 
-    (0 until k).foreach(i => this.clusters(i) = new Cluster(s"cluster$i", this.data.getNormalizedData, this.data.nbAttributes))
+    println("\nDÉBUT DU CLUSTERING...\n")
+    println("CHOIX DES CENTRES INITIAUX...\n")
+    println(s"$k CLUSTERS :\n")
 
-    var stop: Boolean = false
-    var iteration: Int = 0
-    while !stop do
-      println(s"Iteration $iteration")
-      val initialCentroids: Array[Individu] = this.clusters.map(_.centroid.copy)
+    for (i <- 0 until k)
+      this.clusters(i) = new Cluster("cluster " + i, exemples, this.data.nbAttributes)
+      println(this.clusters(i))
+
+
+    while (stop == false) {
+      previousCentroid = this.clusters.map(_.centroid.copy)
+      //previousCentroid.foreach(i => println(i))
+
+      println(s"\nIteration $iteration")
+
       this.clusters.foreach(_.empty)
-      this.exemples.indices.foreach(i => this.clusters.minBy(cluster => cluster.centroid.distance(exemples(i))).add(i))
-      this.clusters.foreach(cluster =>
-        cluster.computeCentroid;
-        (0 until cluster.centroid.nbAttributes).foreach(i =>
-          if cluster.centroid.get(i).isNaN then
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA    ")
-              println(cluster.centroid.get(i))
-              Thread.sleep(40000))
-        cluster.computeClassCluster;
-        cluster.computeClusterError;
-        cluster.computeIntraDistance;
-      )
+      for (i <- 0 until k)
 
-      //      if iteration == 0 then
-      //        this.computeQuality()
-      //        println(s"Qualite du clustering: $qualiteClustering")
+      // Affectation de chaque données aux centres initiaux les plus proche
+        for (j <- 0 until this.exemples.length)
+          @@ -55,20 +54,34 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String) {
 
-      iteration += 1
-      if initialCentroids.zipWithIndex.forall((centroid, i) => centroid.distance(this.clusters(i).centroid) == 0.0) then stop = true
+        // MAJ des centres
+        this.clusters.foreach(cluster =>
+          cluster.computeCentroid
+            cluster.computeClassCluster
+          cluster.computeClusterError
+          cluster.computeIntraDistance
+        )
 
-    //        println(s"Centroid $i: ${centroid.distance(this.clusters(i).centroid)}")
+        previousCentroid.indices.foreach(i =>
+          if this.previousCentroid(i).distance(this.clusters(i).centroid) == 0.0 || this.previousCentroid(i).distance(this.clusters(i).centroid).isNaN then stop = true)
 
-    //      initialCentroids.indices.foreach(i =>
+        for (i <- 0 until k)
+          println(this.clusters(i))
 
-    //        if initialCentroids(i).distance(this.clusters(i).centroid) < 1E-20 then stop = true else stop = false
-    //      )
-    //    this.data.plotAttributesValues()
-    println("Fin du Clustering")
-    this.computeQuality()
-    println(s"Qualite du K-Mims: $qualiteClustering")
-    println("Erreurs des clusters")
-    this.clusters.indices.foreach(i => println(s"Cluster $i:\terror: ${this.clusters(i).erreur}\t\t\t\tnumber of examples: ${this.clusters(i).size}"))
+        iteration += 1
+      }
 
+      def displayAllData: Unit = this.data.displayAllData()
 
+      def displayClasses: Unit = this.data.displayClasses()
 
-  def displayAllData: Unit = this.data.displayAllData()
+      def displayData: Unit = this.data.displayData()
 
-  def displayClasses: Unit = this.data.displayClasses()
+      def displayNormalizedData: Unit = this.data.displayNormalizedData()
 
-  def displayData: Unit = this.data.displayData()
+      def displayStats: Unit = this.data.displayStats()
 
-  def displayNormalizedData: Unit = this.data.displayNormalizedData()
+      private def qualite: Double = this.qualiteClustering
 
-  def displayStats: Unit = this.data.displayStats()
+      private def computeQuality(): Unit =
+        this.computeInterDistance()
+      this.qualiteClustering = this.interDistance / (this.clusters.map(_.intraDistance).sum / this.clusters.length.toDouble)
 
-  private def qualite: Double = this.qualiteClustering
+      private def computeInterDistance(): Unit =
+      val k = this.clusters.length
 
-  private def computeQuality(): Unit =
-    this.computeInterDistance()
-    this.qualiteClustering = this.interDistance / (this.clusters.map(_.intraDistance).sum / this.clusters.length.toDouble)
+      this.interDistance = 0.0
+      for i <- 0 until k - 1 do
+        for j <- i + 1 until k do
+          this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)
 
-  private def computeInterDistance(): Unit =
-    val k = this.clusters.length
+      //    (0 until k - 1).foreach(i => (i + 1 until k).foreach(j => this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)))
+      this.interDistance /= (k * (k - 1) / 2)
 
-    this.interDistance = 0.0
-    for i <- 0 until k - 1 do
-      for j <- i + 1 until k do
-        this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)
-
-    //    (0 until k - 1).foreach(i => (i + 1 until k).foreach(j => this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)))
-    this.interDistance /= (k * (k - 1) / 2)
-
-
-}
