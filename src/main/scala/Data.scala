@@ -260,7 +260,7 @@ class Data(fichierDonnees: String, fichierAttributs: String):
         classNumber = this.nbClasses
         this.nbClasses += 1
 
-      val donnee = new Exemple(a - 1, classNumber)
+      val donnee = new Exemple(a - 1, classNumber, className)
 
       // parcours des attributs
       for (j <- 0 until a - 1)
@@ -330,7 +330,7 @@ class Data(fichierDonnees: String, fichierAttributs: String):
    */
   private def normalizeData(): Unit =
     for (i <- 0 until this.nbDonnees)
-      this.normalizedData(i) = new Exemple(this.nbAttributs, this.data(i).classNumber)
+      this.normalizedData(i) = new Exemple(this.nbAttributs, this.data(i).classNumber, this.data(i).className)
 
       for (j <- 0 until this.nbAttributs)
         this.normalizedData(i).set(j, (this.data(i).get(j) - this.mins.get(j)) /
