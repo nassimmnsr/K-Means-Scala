@@ -1,8 +1,8 @@
-import smile.plot.swing.{Canvas, Palette, PlotPanel, ScatterPlot}
-import smile.projection.PCA
-
-import java.awt.{Color, GridLayout}
-import javax.swing.{JComponent, JFrame, JPanel}
+//import smile.plot.swing.{Canvas, Palette, PlotPanel, ScatterPlot}
+//import smile.projection.PCA
+//
+//import java.awt.{Color, GridLayout}
+//import javax.swing.{JComponent, JFrame, JPanel}
 //
 //class Visualisation(val kMeans: Kmeans, val k: Int):
 //  val data: Array[Array[Double]] = kMeans.getData.getNormalizedData.map(exemple =>

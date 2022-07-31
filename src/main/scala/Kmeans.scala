@@ -72,7 +72,7 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
     val matriceDeProjection = PCA.fit(data).setProjection(2).project(data)
 
     val frame: JFrame = new JFrame("K-Means Visualizations")
-    val clustersConnus: PlotPanel = ScatterPlot.of(matriceDeProjection, kMeans.getKnownLabels, '*')
+    val clustersConnus: PlotPanel = ScatterPlot.of(matriceDeProjection, this.getKnownLabels, '*')
       .canvas()
       .setTitle("Clusters connus")
       .setAxisLabel(0, "Composante Principale 1")
@@ -88,19 +88,16 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
     //    kMeans.getKnownLabels.indices.foreach(i =>
     //      println(kMeans.getKnownLabels(i) + " " + kMeans.getLabels(i))
     //    )
-    val kMeansClusters: PlotPanel = ScatterPlot.of(matriceDeProjection, kMeans.getLabels, '*')
+    var kMeansClusters: PlotPanel = ScatterPlot.of(matriceDeProjection, this.normalizedData.map(_ => "Before clustering"), '*')
       .canvas()
       .setTitle("Clusters obtenus par notre K-Means")
       .setAxisLabel(0, "Composante Principale 1")
       .setAxisLabel(1, "Composante Principale 2")
       .panel()
-    //    val frame: JFrame = canvas.window()
+
     frame.add(kMeansClusters)
     frame.revalidate()
-
-    println(matriceDeProjection.map(elt => elt(0)).length)
-    println(s"matriceDeProjection(0).max : ${matriceDeProjection.map(elt => elt(0)).max} matriceDeProjection(0).min: ${matriceDeProjection.map(elt => elt(0)).min}")
-    println(s"matriceDeProjection(1).max : ${matriceDeProjection.map(elt => elt(1)).max} matriceDeProjection(1).min: ${matriceDeProjection.map(elt => elt(1)).min}")
+    Thread.sleep(1000)
 
 
     println("Clustering...")
@@ -112,6 +109,7 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
     var iteration: Int = 0
     while !stop do
       println(s"Iteration $iteration")
+      frame.remove(kMeansClusters)
       val initialCentroids: Array[Individu] = this.clusters.map(_.centroid.copy)
       this.clusters.foreach(_.empty())
       this.normalizedData.indices.foreach(i => this.clusters.minBy(cluster => cluster.centroid.distance(normalizedData(i))).add(i))
@@ -127,6 +125,17 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
         cluster.computeClusterError()
         cluster.computeIntraDistance()
       )
+
+      kMeansClusters = ScatterPlot.of(matriceDeProjection, this.getLabels, '*')
+        .canvas()
+        .setTitle("Clusters obtenus par notre K-Means")
+        .setAxisLabel(0, "Composante Principale 1")
+        .setAxisLabel(1, "Composante Principale 2")
+        .panel()
+
+      frame.add(kMeansClusters)
+      frame.revalidate()
+      Thread.sleep(1000)
 
       //      if iteration == 0 then
       //        this.computeQuality()
@@ -187,16 +196,16 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
     (0 until k - 1).foreach(i => (i + 1 until k).foreach(j => this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)))
     this.interDistance /= (k * (k - 1) / 2)
 
-  def getLabels: Array[String] =
+  private def getLabels: Array[String] =
     val labels: Array[String] = new Array[String](this.normalizedData.length)
     this.clusters.foreach(cluster =>
       (0 until cluster.size).foreach(i =>
         val numExemple: Int = cluster.get(i)
-          labels (numExemple) = cluster.name
+          labels(numExemple) = cluster.name
         //      )
       ))
 
     labels
 
-  def getKnownLabels: Array[String] =
+  private def getKnownLabels: Array[String] =
     this.data.getNormalizedData.map(_.className)
