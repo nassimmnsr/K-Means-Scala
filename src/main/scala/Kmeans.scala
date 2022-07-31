@@ -22,11 +22,11 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
       this.clusters = this.clusters.filter(_.size > 0)
       this.clusters.foreach(cluster =>
         cluster.computeCentroid();
-        (0 until cluster.centroid.nbAttributes).foreach(i =>
-        if cluster.centroid.get(i).isNaN then
-          print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA    ")
-          println(cluster.centroid.get(i))
-          Thread.sleep(40000))
+//        (0 until cluster.centroid.nbAttributes).foreach(i =>
+//        if cluster.centroid.get(i).isNaN then
+//          print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA    ")
+//          println(cluster.centroid.get(i))
+//          Thread.sleep(40000))
         cluster.computeClassCluster()
         cluster.computeClusterError()
         cluster.computeIntraDistance()
@@ -48,7 +48,7 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
 //    this.data.plotAttributesValues()
     println("Fin du Clustering")
     this.computeQuality()
-    println(s"Qualite du K-Mims: $qualiteClustering")
+    println(s"Qualite du K-Mims: ${this.qualiteClustering}")
     println("Erreurs des clusters")
     this.clusters.indices.foreach(i => println(s"Cluster $i:\terror: ${this.clusters(i).erreur}\t\t\t\tnumber of examples: ${this.clusters(i).size}"))
 
@@ -64,7 +64,7 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
 
   def displayStats(): Unit = this.data.displayStats()
 
-  private def qualite: Double = this.qualiteClustering
+  def qualite: Double = this.qualiteClustering
 
   private def computeQuality(): Unit =
     this.computeInterDistance()
@@ -81,6 +81,8 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
       println(s"IntraDistance: $intraDistance")
 //      Thread.sleep(8000)
 
+  def getData: Data = this.data
+
   private def computeInterDistance(): Unit =
     val k = this.clusters.length
 
@@ -91,3 +93,14 @@ class Kmeans(fichierDonnees: String, fichierAttributs: String):
 
     (0 until k - 1).foreach(i => (i + 1 until k).foreach(j => this.interDistance += this.clusters(i).centroid.distance(this.clusters(j).centroid)))
     this.interDistance /= (k * (k - 1) / 2)
+
+  def getLabels: Array[Int] =
+    val labels: Array[Int] = new Array[Int](this.normalizedData.length)
+    this.clusters.foreach(cluster =>
+      (0 until cluster.size).foreach(i =>
+        val numExemple: Int = cluster.get(i)
+        labels(numExemple) = cluster.classNumber
+//      )
+    ))
+
+    labels

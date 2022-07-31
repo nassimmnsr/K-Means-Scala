@@ -1,4 +1,4 @@
-import testUtils._
+import util._
 
 object testCluster:
   def main(args: Array[String]): Unit =

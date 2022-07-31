@@ -15,3 +15,17 @@ libraryDependencies  ++= Seq(
   // It depends on LGPL code
   "org.scalanlp" %% "breeze-viz" % "2.0.1-RC1"
 )
+
+// https://mvnrepository.com/artifact/com.github.haifengl/smile-plot
+libraryDependencies += "com.github.haifengl" % "smile-plot" % "2.6.0"
+libraryDependencies += "com.github.haifengl" % "smile-core" % "2.6.0"
+
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+libraryDependencies += "org.slf4j" % "slf4j-api" % "2.0.0-alpha7"
+libraryDependencies += "org.slf4j" % "slf4j-simple" % "2.0.0-alpha7"
+
+// https://mvnrepository.com/artifact/org.bytedeco/openblas
+libraryDependencies += "org.bytedeco" % "openblas" % "0.3.19-1.5.7"
+
+// https://mvnrepository.com/artifact/org.bytedeco/openblas-platform
+libraryDependencies += "org.bytedeco" % "openblas-platform" % "0.3.19-1.5.7"

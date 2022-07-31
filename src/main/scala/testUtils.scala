@@ -1,16 +1,7 @@
-import io.AnsiColor._
-
 object testUtils:
-  def display(message: String): Unit =
-    println()
-    println(YELLOW + BOLD + "*" * 35 + RESET)
-    println(YELLOW + BOLD + message + RESET)
-    println(YELLOW + BOLD + "*" * 35 + RESET)
-    println()
+  def main(args: Array[String]): Unit = {
+    val kmeans = new Kmeans("ressources/data/iris.data", "ressources/data/irisAttributesNames.txt")
 
-  def displayTitle(message: String): Unit =
-    println()
-    println(GREEN + BOLD + "*" * 35 + RESET)
-    println(GREEN + BOLD + message + RESET)
-    println(GREEN + BOLD + "*" * 35 + RESET)
-    println()
+    val visu = new Visualisation(kmeans, 3)
+    visu.display
+  }
