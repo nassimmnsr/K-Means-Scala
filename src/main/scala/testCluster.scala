@@ -5,7 +5,7 @@ object testCluster:
     displayTitle("Tests Start")
 
     // on créé un objet donnees de type Data
-    val donnees: Data = new Data("ressources/data/iris.data", "ressources/data/irisAttributesNames.txt")
+    val donnees: Data = new Data("resources/data/iris.data", "resources/data/irisAttributesNames.txt")
 
     // recupere les exemples normalisés de donnees
     val exemples: Array[Exemple] = donnees.getNormalizedData

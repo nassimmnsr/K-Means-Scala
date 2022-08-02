@@ -4,8 +4,7 @@ object testData {
     // qui collecte les données depuis les fichiers
     // iris.data et irisAttributes.names
 
-    val donnees = new Data("ressources/data/iris.data", "ressources/data/irisAttributesNames.txt")
+    val donnees = new Data("resources/data/iris.data", "resources/data/irisAttributesNames.txt")
     donnees.displayNormalizedData()
-//    println(donnees.getData(112))
   }
 }

@@ -228,7 +228,7 @@ class Data(fichierDonnees: String, fichierAttributs: String):
     var i = 0
 
     for (ligne <- bufferedSource.getLines)
-      println(ligne)
+//      println(ligne)
       this.attributesNames(i) = ligne
 
       i += 1

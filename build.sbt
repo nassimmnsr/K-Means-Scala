@@ -29,3 +29,10 @@ libraryDependencies += "org.bytedeco" % "openblas" % "0.3.19-1.5.7"
 
 // https://mvnrepository.com/artifact/org.bytedeco/openblas-platform
 libraryDependencies += "org.bytedeco" % "openblas-platform" % "0.3.19-1.5.7"
+
+mainClass := Some("demo")
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}

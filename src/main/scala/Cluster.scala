@@ -24,10 +24,9 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
   def classNumber: Int = this.clusterClassNumber
 
   def computeCentroid(): Unit =
-    if this.size != 0 then
-      val sumAttributes: Array[Double] = new Array[Double](_nbAttributes)
-      this.exemples.foreach(exemple => (0 until exemple.nbAttributes).foreach(i => sumAttributes(i) += exemple.get(i)))
-      (0 until _nbAttributes).foreach(i => this.clusterCentroid.set(i, sumAttributes(i) / this.size))
+    val sumAttributes: Array[Double] = new Array[Double](_nbAttributes)
+    this.exemples.foreach(exemple => (0 until exemple.nbAttributes).foreach(i => sumAttributes(i) += exemple.get(i)))
+    (0 until _nbAttributes).foreach(i => this.clusterCentroid.set(i, sumAttributes(i) / this.size))
 
   def computeClassCluster(): Unit =
     if this.size > 0 then this.clusterClassNumber = this.exemples.groupBy(_.classNumber).maxBy(_._2.size)._1
@@ -37,10 +36,6 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
 
   def computeIntraDistance(): Unit =
     this.clusterIntraDistance = this.exemples.map(exemple => math.pow(exemple.distance(this.clusterCentroid), 2)).sum / this.size.toDouble
-    if clusterIntraDistance.isNaN then
-      println("clusterIntraDistance is NaN")
-      println(s"${this.exemples.map(exemple => math.pow(exemple.distance(this.clusterCentroid), 2)).sum} / ${this.size.toDouble} = ${this.clusterIntraDistance}")
-//      Thread.sleep(4000)
 
   def empty(): Unit = this.exemplesNums.clear()
 
@@ -61,5 +56,5 @@ class Cluster(cName: String, val donnees: Array[Exemple], val _nbAttributes: Int
   override def toString: String =
     s"Cluster(clusterName: ${this.clusterName}, _nbAttributes: ${this._nbAttributes}, exemplesNums: " +
       s"${this.exemplesNums}, clusterCentroid: ${this.clusterCentroid}, clusterIntraDistance: " +
-      s"${this.clusterIntraDistance}, clusterError: ${this.clusterError}, clusterClassName: TEMPORARILY_UNAVAILABLE, " +
+      s"${this.clusterIntraDistance}, clusterError: ${this.clusterError}, clusterClassName: ${this.className}, " +
       s"clusterClassNumber: ${this.clusterClassNumber})"
