@@ -14,11 +14,17 @@
  */
 
 class Exemple(_nbAttributes: Int,
-              _classNumber: Int) extends Individu(_nbAttributes) :
+              _classNumber: Int,
+             _className: String) extends Individu(_nbAttributes) :
   /**
    * @return le numéro de classe de l'Exemple
    */
   def classNumber: Int = _classNumber
+
+  /**
+   * @return le nom de classe de l'Exemple
+   */
+  def className: String = _className
 
   /**
    *
